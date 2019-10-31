@@ -1,0 +1,35 @@
+{:edge.kick/config
+ {:kick.builder/target #profile {:dev "target/dev"
+                                 :prod "target/prod"}
+  :kick/sass {:builds [{:id "radar"
+                        :source "radar.scss"
+                        :target "public/radar.css"}]}
+  :kick/figwheel-main {:builds [{:id "app"
+                                 :main acme.radar.frontend.main
+                                 :output-to "public/frontend.js"
+                                 :output-dir "public/frontend.out"
+                                 :asset-path "/frontend.out"
+                                 :optimizations #profile {:dev :none
+                                                          :prod :advanced}}]
+                       :figwheel-config
+                       {:ring-server-options
+                        {:port 2929}}}}
+
+ :ig.system/base
+ {:acme.radar.core/string "Hello, radar!"
+  [:edge.yada.ig/classpath-name :acme.radar/index] {:name "index.html"}
+  [:edge.yada.ig/resources :acme.radar/assets] {:path "public"}
+  :edge.yada.ig/listener {:handler #ig/ref :edge.bidi.ig/vhost
+                          :port 3636}
+  :edge.bidi.ig/vhost [["http://localhost:3636"
+                        [""
+                         [["/" #ig/ref [:acme.radar/index :edge.yada.ig/classpath-name]]
+                          ["/hello" #ig/ref :acme.radar.core/string]
+                          ["" #ig/ref [:acme.radar/assets :edge.yada.ig/resources]]]]]]}
+
+ :ig.system/dev
+ {:edge.kick/builder #ref [:edge.kick/config]}
+
+ :ig/system #profile {:dev #merge [#ref [:ig.system/base]
+                                   #ref [:ig.system/dev]]
+                      :default #ref [:ig.system/base]}}

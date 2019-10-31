@@ -1,0 +1,3 @@
+[{:id "1", :username "jane_smith", :text "A tweet from the database"}
+ {:id "2", :username "john_smith", :text "Another tweet from the database", :favorite? true}
+ {:id "30089bad-9f80-479c-8057-12fc4d9f93db", :text "save me a ew"}]

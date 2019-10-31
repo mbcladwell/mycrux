@@ -35,6 +35,9 @@
    {:name "Jane Smith"
     :following? true}})
 
+
+
+
 (defn following
   [{:keys [username]}]
   {"jane_smith"
