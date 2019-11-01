@@ -35,14 +35,27 @@
    {:name "Jane Smith"
     :following? true}})
 
+;;dev=> (followers "developer")
+;;{"john_smith" {:name "John Smith"},
+;; "jane_smith" {:name "Jane Smith", :following? true}}
 
 
+;;(defn followers
+;;  [username]
+;;(select-keys (get (get (all) :users) username)  [:follows]))
+
+;; (defn following
+;;   [{:keys [username]}]
+;;   {"jane_smith"
+;;    {:name "Jane Smith"
+;;     :following? true}})
 
 (defn following
   [{:keys [username]}]
-  {"jane_smith"
-   {:name "Jane Smith"
-    :following? true}})
+ ;; (select-keys (get (all) :users) ["john_smith"])
+ ;; (get (get (get (all) :users) "developer") :follows)
+ (select-keys (get (all) :users) (get (get (get (all) :users) username) :follows) ))
+
 
 (defn toggle-favorite
   [{:keys [vent-id]}]
