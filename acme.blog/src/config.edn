@@ -1,0 +1,25 @@
+{:edge.kick/config
+ {:kick.builder/target #profile {:dev "target/dev"
+                                 :prod "target/prod"}
+  :kick/sass {:builds [{:id "blog"
+                        :source "blog.scss"
+                        :target "public/blog.css"}]}}
+
+ :ig.system/base
+ {:acme.blog.core/string "Hello, blog!"
+  [:edge.yada.ig/classpath-name :acme.blog/index] {:name "index.html"}
+  [:edge.yada.ig/resources :acme.blog/assets] {:path "public"}
+  :edge.yada.ig/listener {:handler #ig/ref :edge.bidi.ig/vhost
+                          :port 7500}
+  :edge.bidi.ig/vhost [["http://localhost:7500"
+                        [""
+                         [["/" #ig/ref [:acme.blog/index :edge.yada.ig/classpath-name]]
+                          ["/hello" #ig/ref :acme.blog.core/string]
+                          ["" #ig/ref [:acme.blog/assets :edge.yada.ig/resources]]]]]]}
+
+ :ig.system/dev
+ {:edge.kick/builder #ref [:edge.kick/config]}
+
+ :ig/system #profile {:dev #merge [#ref [:ig.system/base]
+                                   #ref [:ig.system/dev]]
+                      :default #ref [:ig.system/base]}}

@@ -1,0 +1,7 @@
+{:ig/system
+ {:acme.api.core/string "Hello, api!"
+  :edge.yada.ig/listener {:handler #ig/ref :edge.bidi.ig/vhost
+                          :port 8585}
+  :edge.bidi.ig/vhost [["http://localhost:8585"
+                        [""
+                         [["/" #ig/ref :acme.api.core/string]]]]]}}

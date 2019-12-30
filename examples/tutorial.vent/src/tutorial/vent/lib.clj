@@ -19,7 +19,7 @@
 
 (defn all
   []
-  (db/read) )
+  (get  (db/read) :vents) )
 
 (defn favorites
   ;;supposed to be anonymous??
@@ -29,11 +29,9 @@
 
 (defn followers
   [{:keys [username]}]
-  {"john_smith"
-   {:name "John Smith"}
-   "jane_smith"
-   {:name "Jane Smith"
-    :following? true}})
+  {"john_smith"  {:name "John Smith"}
+   "jane_smith"  {:name "Jane Smith"
+                  :following? true}})
 
 ;;dev=> (followers "developer")
 ;;{"john_smith" {:name "John Smith"},
@@ -73,7 +71,7 @@
 
  (defn add-vent
    [{:keys [text]}]
- (db/store  (update (all) :vents conj  {:id (generate-id) :username "developer"  :text text})
+ (db/store  (update (all) :vents (conj  {:id (generate-id) :username "developer"  :text text}))
    ))
 
 
