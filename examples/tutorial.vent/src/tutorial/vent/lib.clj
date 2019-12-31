@@ -19,12 +19,17 @@
 
 (defn all
   []
-  (get  (db/read) :vents) )
+  (let [all-users (get (db/read) :users)
+        all-vents (get (db/read) :vents) ]
+    (map #(assoc % :author  (get all-users (get % :username) ))   all-vents)))
+
+;;    (map #(assoc % :author (get (get all-users  (get % :username)) :name) )  all-vents)))
+
 
 (defn favorites
   ;;supposed to be anonymous??
   []
-  (filter :favorite?  (get (all) :vents)))
+  (filter :favorite?  (all) ))
 
 
 (defn followers
@@ -70,9 +75,9 @@
 ;;            "with id" (generate-id)))
 
  (defn add-vent
-   [{:keys [text]}]
- (db/store  (update (all) :vents (conj  {:id (generate-id) :username "developer"  :text text}))
-   ))
+   [{:keys [text username]}]
+   (db/store  (update (db/read) :vents conj {:id (generate-id) :username username  :text text}  ))
+              )
 
 
 (defn toggle-follow
@@ -81,7 +86,8 @@
 
 (defn add-author
   []
-  (let [all-users (get (all) :users)
-        all-vents (get (all) :vents) ]
+  (let [all-users (get (db/read) :users)
+        all-vents (get (db/read) :vents) ]
     (map #(assoc % :author (get (get all-users  (get % :username)) :name) )  all-vents)))
 
+;;
