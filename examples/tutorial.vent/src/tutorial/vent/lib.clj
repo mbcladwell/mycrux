@@ -32,32 +32,37 @@
   (filter :favorite?  (all) ))
 
 
-(defn followers
-  [{:keys [username]}]
-  {"john_smith"  {:name "John Smith"}
-   "jane_smith"  {:name "Jane Smith"
-                  :following? true}})
+;; (defn followers
+;;   [{:keys [username]}]
+;;   {"john_smith"  {:name "John Smith"}
+;;    "jane_smith"  {:name "Jane Smith"
+;;                   :following? true}})
 
 ;;dev=> (followers "developer")
 ;;{"john_smith" {:name "John Smith"},
 ;; "jane_smith" {:name "Jane Smith", :following? true}}
 
 
-;;(defn followers
-;;  [username]
-;;(select-keys (get (get (all) :users) username)  [:follows]))
+;;select-keys on users, based on a keep on the :users which have username in their :follows.
+;; (map #(keep % [:follows]) (map #(val %) (:users (db/read))))
+;; (map #(select-keys (val %) [:name])    (:users (db/read)) )
+;; (some #(= "b" %) ["d" "a" "b"])
+;; (def a (map #(val %) (:users (db/read))))
+;; (keep (some #()   (:follows  %))   a)
 
-;; (defn following
-;;   [{:keys [username]}]
-;;   {"jane_smith"
-;;    {:name "Jane Smith"
-;;     :following? true}})
+;; (map #(some (partial = "developer") (:follows %))  a)
+
+(defn followers
+ [{:keys [username]}]
+(:follows (get (:users (db/read)) username) ))
+
+
 
 (defn following
   [{:keys [username]}]
  ;; (select-keys (get (all) :users) ["john_smith"])
  ;; (get (get (get (all) :users) "developer") :follows)
- (select-keys (get (all) :users) (get (get (get (all) :users) username) :follows) ))
+ (select-keys (get (db/read) :users) (get (get (get (db/read) :users) username) :follows) ))
 
 
 (defn toggle-favorite
