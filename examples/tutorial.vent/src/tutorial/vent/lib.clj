@@ -50,12 +50,20 @@
 ;; (def a (map #(val %) (:users (db/read))))
 ;; (keep (some #()   (:follows  %))   a)
 
-;; (map #(some (partial = "developer") (:follows %))  a)
+;; (def b (map #(some (partial = "developer") (:follows %))  a))
+;; (def c (do (keep #(when (nth b %)(nth a %)) (range (count a)))))
+;; (map #(select-keys % [:name]) c)
 
+ 
 (defn followers
- [{:keys [username]}]
-(:follows (get (:users (db/read)) username) ))
+  [{:keys [username]}]
+  (let [a  (map #(val %) (:users (db/read)))   ;; user values only
+        b (map #(some (partial = username) (:follows %))  a)
+        c (do (keep #(when (nth b %)(nth a %)) (range (count a))))
 
+        ]
+   (map #(select-keys % [:name]) c) )
+)
 
 
 (defn following
